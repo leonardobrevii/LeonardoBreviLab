@@ -7,4 +7,8 @@ def index(request):
         'latest_question_list': latest_question_list,
     }
     return render(request, 'polls/index.html', context)
+from django.http import HttpResponse
 
+def detail(request, question_id):
+    question = Question.objects.get(id=question_id)
+    return HttpResponse(question.question_text)
