@@ -17,7 +17,7 @@ def detail(request, question_id):
 
 def vote(request, question_id):
     question = get_object_or_404(Question, id=question_id)
-    
+
     try:
         selected_choice = question.choice_set.get(id=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
@@ -28,4 +28,9 @@ def vote(request, question_id):
     else:
         selected_choice.votes += 1
         selected_choice.save()
-        return redirect('detail', question_id=question.id)
+        return redirect('results', question_id=question.id)
+
+
+def results(request, question_id):
+    question = get_object_or_404(Question, id=question_id)
+    return render(request, 'polls/results.html', {'question': question})
