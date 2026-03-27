@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from .models import Question
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Question, Choice
+
 
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
@@ -7,13 +8,24 @@ def index(request):
         'latest_question_list': latest_question_list,
     }
     return render(request, 'polls/index.html', context)
-from django.http import HttpResponse
 
-def detail(request, question_id):
-    question = Question.objects.get(id=question_id)
-    return HttpResponse(question.question_text)
-from django.shortcuts import render, get_object_or_404
 
 def detail(request, question_id):
     question = get_object_or_404(Question, id=question_id)
     return render(request, 'polls/detail.html', {'question': question})
+
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, id=question_id)
+    
+    try:
+        selected_choice = question.choice_set.get(id=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        return redirect('detail', question_id=question.id)
