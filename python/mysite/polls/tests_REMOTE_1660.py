@@ -10,8 +10,6 @@ class QuestionModelTests(TestCase):
         time = timezone.now() + datetime.timedelta(days=30)
         future_question = Question(pub_date=time)
         self.assertIs(future_question.was_published_recently(), False)
-<<<<<<< HEAD
-=======
 
     def test_was_published_recently_with_old_question(self):
         time = timezone.now() - datetime.timedelta(days=2)
@@ -22,4 +20,3 @@ class QuestionModelTests(TestCase):
         time = timezone.now() - datetime.timedelta(hours=1)
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
->>>>>>> lab_2
