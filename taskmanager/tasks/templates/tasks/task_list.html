@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+</head>
+<body>
+<form action="/logout/" method="post">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
+<h1>Task Manager</h1>
+
+<a href="/tasks/">All</a>
+<a href="/tasks/?status=todo">To Do</a>
+<a href="/tasks/?status=doing">Doing</a>
+<a href="/tasks/?status=done">Done</a>
+
+<a href="/tasks/add/">Add New Task</a>
+
+<ul>
+    {% for task in tasks %}
+        <li>
+            <strong>{{ task.title }}</strong><br>
+            {{ task.description }}<br>
+            Status: {{ task.status }}<br>
+            Category: {{ task.category }}<br>
+            Owner: {{ task.owner }}
+        </li>
+        <br>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
