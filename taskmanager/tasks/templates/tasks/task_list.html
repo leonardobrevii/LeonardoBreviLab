@@ -1,7 +1,11 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Task Manager</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'tasks/style.css' %}">
 </head>
 <body>
 <form action="/logout/" method="post">
@@ -25,6 +29,11 @@
             Status: {{ task.status }}<br>
             Category: {{ task.category }}<br>
             Owner: {{ task.owner }}
+            <br>
+<a href="/tasks/edit/{{ task.id }}/">Edit</a>
+<br>
+
+<a href="/tasks/delete/{{ task.id }}/">Delete</a>
         </li>
         <br>
     {% endfor %}
