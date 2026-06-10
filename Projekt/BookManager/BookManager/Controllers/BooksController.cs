@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookManager.Models;
 using BookManager.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 public class BooksController : Controller
 {
@@ -16,12 +17,15 @@ public class BooksController : Controller
     // GET: BOOKS
     public async Task<IActionResult> Index(string searchString)
     {
-        var books = from b in _context.Book
-                    select b;
+        var books = _context.Book
+            .Include(b => b.Category)
+            .AsQueryable();
 
         if (!string.IsNullOrEmpty(searchString))
         {
-            books = books.Where(s => s.Title.Contains(searchString));
+            books = books.Where(b =>
+                b.Title.Contains(searchString) ||
+                b.Author.Contains(searchString));
         }
 
         return View(await books.ToListAsync());
@@ -46,17 +50,22 @@ public class BooksController : Controller
     }
 
     // GET: BOOKS/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
+   public IActionResult Create()
+{
+    ViewBag.CategoryId = new SelectList(
+        _context.Category,
+        "Id",
+        "Name");
+
+    return View();
+}
 
     // POST: BOOKS/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Author,Year")] Books book)
+    public async Task<IActionResult> Create([Bind("Id,Title,Author,Year,CategoryId")] Books book)
     {
         if (ModelState.IsValid)
         {
@@ -88,7 +97,7 @@ public class BooksController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Author,Year")] Books book)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Author,Year,CategoryId")] Books book)
     {
         if (id != book.Id)
         {
