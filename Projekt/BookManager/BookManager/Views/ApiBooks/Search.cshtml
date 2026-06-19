@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Search Books Online";
+}
+
+<h1>Search Books Online</h1>
+
+<form asp-action="Search" method="post">
+    <div class="form-group">
+        <label>Book title:</label>
+        <input type="text" name="title" class="form-control" />
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">
+        Search
+    </button>
+</form>

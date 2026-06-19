@@ -1,0 +1,71 @@
+﻿@model IEnumerable<BookManager.Models.OpenLibraryBook>
+
+@{
+    ViewData["Title"] = "Results";
+}
+
+<h1>Search Results</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>
+                    @(book.Author_Name != null
+                        ? string.Join(", ", book.Author_Name)
+                        : "Unknown")
+                </td>
+            </tr>
+        }
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+
+                    <td>
+                        @(book.Author_Name != null
+                            ? string.Join(", ", book.Author_Name)
+                            : "Unknown")
+                    </td>
+
+                    <td>
+                        @book.First_Publish_Year
+                    </td>
+
+                    <td>
+                        <form asp-action="AddToLibrary" method="post">
+                            <input type="hidden"
+                                   name="title"
+                                   value="@book.Title" />
+
+                            <input type="hidden"
+                                   name="author"
+                                   value="@(book.Author_Name != null ? string.Join(", ", book.Author_Name) : "Unknown")" />
+
+                            <input type="hidden"
+                                   name="year"
+                                   value="@book.First_Publish_Year" />
+
+                            <button type="submit"
+                                    class="btn btn-success">
+                                Add To Library
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+</table>
+
+<a asp-action="Search">Back</a>
